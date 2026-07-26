@@ -1,0 +1,67 @@
+/* ===========================================================
+   TILET — design tokens
+   Palette drawn from the Ethiopian/Eritrean coffee ceremony and
+   the geometric "tilet" weave found on habesha kemis & netela:
+   roasted coffee brown, unbleached cotton cream, meskel-flower
+   gold, berbere clay-red, gesho-leaf green.
+   =========================================================== */
+:root {
+  /* --- color --- */
+  --coffee-950: #241509;
+  --coffee-900: #2b1b12;
+  --coffee-800: #3d2818;
+  --coffee-700: #58381f;
+  --cream-100: #faf5e9;
+  --cream-200: #f3ecdd;
+  --cream-300: #e8dcc2;
+  --gold-500: #d4a017;
+  --gold-400: #e3b53a;
+  --clay-500: #a63d2f;
+  --clay-600: #8a3025;
+  --gesho-500: #5b7553;
+  --gesho-600: #465e40;
+  --ink: #241509;
+  --paper: #faf5e9;
+
+  /* --- type --- */
+  --font-display: "Fraunces", serif;
+  --font-amharic: "Noto Sans Ethiopic", sans-serif;
+  --font-body: "DM Sans", "Noto Sans Ethiopic", sans-serif;
+
+  /* --- shape / motion --- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 26px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--coffee-900);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
