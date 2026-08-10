@@ -1,11 +1,15 @@
 import { amEnCourse } from "./courses/am-en.js";
+import { amArCourse } from "./courses/am-ar.js";
 
 // Add a new language by dropping another file in ./courses that follows the
 // same shape as am-en.js, then registering it here. The rest of the app
 // (skill path, exercise runner, progress tracking) needs zero changes.
 export const COURSES = {
   "am-en": amEnCourse,
+  "am-ar": amArCourse,
 };
+
+export const DEFAULT_COURSE_ID = "am-en";
 
 export function getCourse(courseId) {
   return COURSES[courseId];

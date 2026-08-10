@@ -2,7 +2,11 @@
   "name": "qene-learn",
   "private": true,
   "version": "0.1.0",
+  "description": "Duolingo-style language-learning app with an Amharic-speaking interface, built for Habesha learners.",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

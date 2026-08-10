@@ -1,6 +1,6 @@
 import { useProgress } from "../context/ProgressContext.jsx";
 
-export function TopBar() {
+export function TopBar({ courses = [], courseId, onChangeCourse }) {
   const { streak, hearts, maxHearts, xp } = useProgress();
   return (
     <header className="topbar">
@@ -8,6 +8,23 @@ export function TopBar() {
         <span className="topbar-brand-mark text-amharic" aria-hidden="true">ቅ</span>
         <span className="topbar-brand-name">Qene</span>
       </div>
+      {courses.length > 1 && (
+        <label className="course-switcher">
+          <span className="sr-only">ትምህርት ምረጥ</span>
+          <select
+            className="course-switcher-select"
+            value={courseId}
+            onChange={(e) => onChangeCourse(e.target.value)}
+            aria-label="ትምህርት ምረጥ"
+          >
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.fromLanguage.name} → {c.toLanguage.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       <div className="topbar-stats">
         <span className="stat stat-streak" title="ተከታታይ ቀናት">
           🔥 {streak}

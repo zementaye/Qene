@@ -36,7 +36,7 @@ export function Translate({ exercise, course, onAnswer }) {
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
         disabled={locked}
-        placeholder="Type the English translation..."
+        placeholder={`Type the ${course.toLanguage.label ?? course.toLanguage.name} translation...`}
         autoFocus
       />
       {locked && !wasCorrect && (

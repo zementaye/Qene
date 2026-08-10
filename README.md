@@ -26,34 +26,67 @@ npm run build      # outputs to dist/
 npm run preview    # sanity-check the production build locally
 ```
 
-## What's in the demo course
+## Deploy (Render)
 
-6 units / lessons, ~48 exercises total, Amharic → English:
-**Greetings**, **I & You** (pronouns), **Numbers 1–10**, **Family**,
-**Food & Drink**, **Common Phrases**. Three exercise types are wired up:
-multiple choice, type-the-translation, and match-the-pairs.
+The repo includes `render.yaml`, so Render can deploy it with no manual
+config:
 
-⚠️ The Amharic content is a solid starting point but hasn't been reviewed
-by a native speaker for register/dialect (e.g. አንተ vs አንቺ gendered forms
-in "you") — worth a pass before this goes in front of real learners.
+1. Push this repo to GitHub (or GitLab).
+2. In the Render dashboard: **New → Blueprint**, point it at the repo.
+   Render reads `render.yaml` and creates a free static site with
+   `npm install && npm run build` as the build command, serving `dist/`.
+3. First deploy takes a couple minutes; after that it's a normal
+   auto-deploy-on-push static site with a Render-provided `.onrender.com`
+   URL (custom domains are free to add in the dashboard).
+
+There's nothing running server-side today — progress lives entirely in
+`localStorage` — so a static site is the whole deployment. When the
+accounts/sync backend lands, that'll be a second service added to the same
+`render.yaml`, not a new deploy target.
+
+## What's in the app
+
+Two courses ship out of the box, switchable from the dropdown in the top
+bar (progress, XP, streak, and hearts are shared across courses; lesson
+completion is tracked per course so switching never overwrites the other
+course's progress):
+
+- **Amharic → English** — 6 units / lessons, ~50 exercises: **Greetings**,
+  **I & You** (pronouns), **Numbers 1–10**, **Family**, **Food & Drink**,
+  **Common Phrases**.
+- **Amharic → Arabic** — 2 units / lessons, ~11 exercises: **Greetings**,
+  **Numbers 1–5**. Added specifically to prove out the "just drop in a
+  content file" claim below — see `src/data/courses/am-ar.js`.
+
+Four exercise types are wired up: multiple choice, type-the-translation,
+match-the-pairs, and listening (audio-first — the target-language word is
+spoken aloud and the learner picks its Amharic meaning; falls back to
+showing the text if the browser has no speech synthesis voice installed).
+
+⚠️ The Amharic and Arabic content are a solid starting point but haven't
+been reviewed by a native speaker for register/dialect (e.g. አንተ vs አንቺ
+gendered forms in "you") — worth a pass before this goes in front of real
+learners.
 
 ## How the engine works
 
-- **`src/data/courses/am-en.js`** — the actual course content (units →
-  lessons → exercises). This is the file to hand-edit or generate more of.
+- **`src/data/courses/*.js`** — the actual course content (units → lessons
+  → exercises), one file per course. This is the file to hand-edit or
+  generate more of.
 - **`src/data/courseLoader.js`** — registry. Add a new course file, add one
-  line here, done. Nothing else needs to change to support e.g. `am-ar.js`.
-- **`src/context/ProgressContext.jsx`** — hearts (5, regenerate 1 every 4h),
-  XP, daily streak, and per-lesson completion, all persisted to
-  `localStorage` so progress survives closing the tab/browser.
+  line here, done. Nothing else needs to change.
+- **`src/context/ProgressContext.jsx`** — hearts (5, regenerate 1 every 4h,
+  with a countdown shown once you run out), XP, daily streak, and
+  per-lesson completion, all persisted to `localStorage` so progress
+  survives closing the tab/browser.
 - **`src/utils/speech.js`** — pronunciation via the browser's built-in
   Web Speech API (`speechSynthesis`) instead of recorded audio files, so
   there are zero audio assets to produce or host. Quality depends on the
   voices installed on the learner's device/OS.
-- **`src/components/exercises/`** — one file per exercise type. Adding a
-  new type (e.g. listening, sentence-building, speaking-with-mic) means
-  adding a component here and registering it in `LessonSession.jsx`'s
-  `EXERCISE_COMPONENTS` map.
+- **`src/components/exercises/`** — one file per exercise type
+  (`multiple_choice`, `translate`, `match`, `listening`). Adding a new type
+  (e.g. sentence-building, speaking-with-mic) means adding a component here
+  and registering it in `LessonSession.jsx`'s `EXERCISE_COMPONENTS` map.
 
 ## Design notes
 
@@ -70,13 +103,14 @@ at this quality), UI chrome uses DM Sans.
   Capacitor would get you real app-store APKs/IPAs reusing 100% of this
   code, with push notifications for streak reminders (very on-brand after
   the reminder app we built earlier).
-- **More courses** — Arabic and a couple of European languages are the
-  most requested by the diaspora; same content-file pattern as `am-en.js`.
+- **More courses** — a couple of European languages are the next most
+  requested by the diaspora; same content-file pattern as `am-en.js` /
+  `am-ar.js` (Arabic is done — see above).
 - **Audio quality** — Web Speech API voices vary by device; recorded audio
   clips (or a TTS API) would sound more natural, at the cost of needing
   real audio assets.
 - **Accounts/sync** — right now progress is local-only per browser. A
   backend (even something lightweight like Supabase) would let progress
   follow a learner across devices.
-- **Listening & speaking exercises** — the exercise-type system is built
-  to make this a drop-in addition once you're ready.
+- **Speaking exercises** — mic input + pronunciation scoring is the one
+  exercise type not yet built; listening is done (see above).

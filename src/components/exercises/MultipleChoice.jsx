@@ -5,7 +5,11 @@ export function MultipleChoice({ exercise, course, onAnswer }) {
   const [selected, setSelected] = useState(null);
   const [locked, setLocked] = useState(false);
 
-  const promptLangCode = exercise.promptLang === "am" ? course.fromLanguage.code : course.toLanguage.code;
+  // When the prompt is shown in the target language, the answer options
+  // are Amharic (and vice versa) — see am-en.js / am-ar.js. Options in
+  // Amharic need the Ethiopic-capable font, or Ge'ez glyphs fall back to
+  // whatever font the browser picks, inconsistent with the rest of the UI.
+  const optionsAreAmharic = exercise.promptLang !== "am";
 
   function choose(i) {
     if (locked) return;
@@ -27,7 +31,7 @@ export function MultipleChoice({ exercise, course, onAnswer }) {
       </div>
       <div className="options-grid">
         {exercise.options.map((opt, i) => {
-          let cls = "option-btn";
+          let cls = optionsAreAmharic ? "option-btn text-amharic" : "option-btn";
           if (locked && i === exercise.correctIndex) cls += " option-btn--correct";
           else if (locked && i === selected) cls += " option-btn--wrong";
           return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MultipleChoice } from "./exercises/MultipleChoice.jsx";
 import { Translate } from "./exercises/Translate.jsx";
 import { Match } from "./exercises/Match.jsx";
+import { Listening } from "./exercises/Listening.jsx";
 import { useProgress } from "../context/ProgressContext.jsx";
 import { TiletDivider } from "./Tilet.jsx";
 
@@ -9,6 +10,7 @@ const EXERCISE_COMPONENTS = {
   multiple_choice: MultipleChoice,
   translate: Translate,
   match: Match,
+  listening: Listening,
 };
 
 export function LessonSession({ course, lesson, onExit, onComplete }) {
@@ -64,7 +66,7 @@ export function LessonSession({ course, lesson, onExit, onComplete }) {
       </div>
 
       {feedback && (
-        <div className={`feedback-banner feedback-banner--${feedback}`}>
+        <div className={`feedback-banner feedback-banner--${feedback}`} role="status" aria-live="polite">
           <TiletDivider height={8} color={feedback === "correct" ? "var(--cream-100)" : "var(--cream-100)"} />
           <span>{feedback === "correct" ? "ትክክል ነው! 🎉" : "እንደገና ሞክር"}</span>
         </div>

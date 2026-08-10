@@ -5,6 +5,10 @@
 //   multiple_choice { prompt, promptLang, options[], correctIndex, say? }
 //   translate       { prompt, promptLang, answer, altAnswers?, say? }
 //   match           { promptLang, pairs: [{a,b}] }   -- a is fromLanguage, b is toLanguage
+//   listening       { say, options[] (fromLanguage), correctIndex }
+//                     -- audio-first: toLanguage word/phrase is spoken aloud,
+//                        learner picks its fromLanguage meaning. Falls back
+//                        to showing `say` as text if TTS isn't available.
 //
 // `say` (optional) is the string spoken aloud via the browser's TTS when the
 // exercise loads / on tap of the sound icon. Use the toLanguage word/phrase.
@@ -41,6 +45,7 @@ export const amEnCourse = {
               ],
             },
             { type: "translate", promptLang: "en", prompt: "ደህና ሁን", answer: "Goodbye", say: "Goodbye" },
+            { type: "listening", say: "Thank you", options: ["አመሰግናለሁ", "ደህና ሁን", "አዎ"], correctIndex: 0 },
           ],
         },
       ],
@@ -150,6 +155,7 @@ export const amEnCourse = {
             { type: "translate", promptLang: "am", prompt: "ምግብ", answer: "Food", say: "Food" },
             { type: "multiple_choice", promptLang: "en", prompt: "To eat", options: ["መጠጣት", "መብላት", "መተኛት"], correctIndex: 1 },
             { type: "translate", promptLang: "am", prompt: "እንጀራ እበላለሁ", answer: "I eat injera", say: "I eat injera" },
+            { type: "listening", say: "Water", options: ["ቡና", "ውሃ", "ዳቦ"], correctIndex: 1 },
             {
               type: "match",
               promptLang: "am",

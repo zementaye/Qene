@@ -69,6 +69,15 @@ export function ProgressProvider({ children }) {
       ...state,
       maxHearts: MAX_HEARTS,
 
+      // ms until the next heart regenerates, or null if hearts are full /
+      // no timer is running. Lets the UI show "next heart in 12m" instead
+      // of just silently blocking the learner.
+      msUntilNextHeart() {
+        if (state.hearts >= MAX_HEARTS || !state.lastHeartLostAt) return null;
+        const remaining = HEART_REGEN_MS - (Date.now() - state.lastHeartLostAt);
+        return Math.max(0, remaining);
+      },
+
       loseHeart() {
         setState((s) => {
           if (s.hearts <= 0) return s;

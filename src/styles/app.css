@@ -61,6 +61,36 @@
   font-size: 14px;
 }
 
+.course-switcher {
+  display: flex;
+  min-width: 0;
+}
+
+.course-switcher-select {
+  max-width: 108px;
+  background: var(--coffee-700);
+  color: var(--cream-100);
+  border: 1px solid var(--coffee-700);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .stat {
   display: flex;
   align-items: center;
@@ -108,6 +138,49 @@
   font-weight: 700;
   color: var(--coffee-900);
   margin: 0;
+}
+
+.skillpath-progress-summary {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--coffee-700);
+  margin: 6px 0 0;
+}
+
+.hearts-empty-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+  background: color-mix(in srgb, var(--clay-500) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--clay-500) 40%, transparent);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin: 0 0 24px;
+  font-family: var(--font-amharic);
+  font-size: 14px;
+  color: var(--coffee-900);
+}
+
+.course-complete-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  background: color-mix(in srgb, var(--gold-400) 22%, transparent);
+  border: 1px solid var(--gold-500);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin: 0 0 24px;
+  font-family: var(--font-amharic);
+  font-size: 14px;
+  color: var(--coffee-900);
+}
+
+.course-complete-emoji {
+  font-size: 28px;
 }
 
 .unit-block {
@@ -343,6 +416,31 @@
   cursor: pointer;
   flex-shrink: 0;
   box-shadow: 0 3px 0 var(--gold-500);
+}
+
+.listen-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  align-self: flex-start;
+  padding: 16px 26px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--gold-400);
+  box-shadow: 0 3px 0 var(--gold-500);
+  font-family: var(--font-amharic);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--coffee-900);
+  cursor: pointer;
+}
+.listen-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--gold-500);
+}
+.listen-btn-icon {
+  font-size: 22px;
 }
 
 .options-grid {
