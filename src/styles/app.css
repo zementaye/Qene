@@ -98,22 +98,28 @@
 }
 
 .heart {
-  font-size: 15px;
+  font-size: 16px;
   margin-left: 1px;
 }
 .heart-full {
-  color: var(--clay-500);
+  color: #e2503f;
+  text-shadow: 0 0 6px rgba(226, 80, 63, 0.5);
 }
 .heart-empty {
   color: var(--coffee-700);
+  opacity: 0.55;
 }
 
 /* ===========================================================
    Skill path
    =========================================================== */
 .skillpath {
-  background: var(--cream-200);
+  background-color: var(--cream-200);
+  background-image:
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--coffee-700) 5%, transparent) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(45deg, color-mix(in srgb, var(--coffee-700) 5%, transparent) 0 2px, transparent 2px 22px);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -8px 24px rgba(20, 12, 6, 0.35);
   padding: 28px 20px 60px;
   min-height: calc(100vh - 90px);
 }
@@ -126,16 +132,18 @@
 .skillpath-eyebrow {
   font-family: var(--font-body);
   font-size: 12px;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--coffee-700);
-  margin: 0 0 4px;
+  color: var(--clay-500);
+  margin: 0 0 6px;
 }
 
 .skillpath-title {
   font-family: var(--font-amharic);
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
+  line-height: 1.15;
   color: var(--coffee-900);
   margin: 0;
 }
@@ -203,6 +211,11 @@
   flex-direction: column;
   align-items: center;
   white-space: nowrap;
+  background: var(--cream-100);
+  border: 1.5px solid color-mix(in srgb, var(--gold-500) 55%, transparent);
+  border-radius: 999px;
+  padding: 6px 18px;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--gold-500) 35%, transparent);
 }
 
 .unit-title {
@@ -221,10 +234,34 @@
 }
 
 .unit-lessons {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 22px;
+  gap: 30px;
+}
+
+/* The tilet path connecting each lesson stop — same diamond-chain motif as
+   TiletDivider, just tiled vertically instead of horizontally. A CSS
+   background tile rather than an SVG sized to content, so it never needs
+   to know how tall a unit with N lessons actually renders. Nodes sit above
+   it (z-index 1, opaque circle fill) so the line reads as passing behind
+   each stop like a bead on a string, echoing the offset "path" the nodes
+   already walk down the page. */
+.unit-lessons::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 50%;
+  width: 16px;
+  transform: translateX(-50%);
+  z-index: 0;
+  opacity: 0.6;
+  background-repeat: repeat-y;
+  background-position: top center;
+  background-size: 16px 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M0 8 L8 1 L15 8 L8 15 Z' fill='none' stroke='%23d4a017' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M4 8 L8 4.5 L12 8 L8 11.5 Z' fill='%23a63d2f' opacity='0.85'/%3E%3C/svg%3E");
 }
 
 .lesson-node {
@@ -236,6 +273,8 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  position: relative;
+  z-index: 1;
   transform: translateX(var(--offset));
   transition: transform 0.2s var(--ease);
 }
@@ -258,16 +297,16 @@
 }
 
 .lesson-node--current .lesson-node-ring {
-  background: var(--gold-400);
+  background: radial-gradient(circle at 33% 28%, var(--gold-300, #f0c869) 0%, var(--gold-400) 45%, var(--gold-500) 100%);
   box-shadow: 0 6px 0 var(--gold-500), 0 10px 18px rgba(43, 27, 18, 0.25);
 }
 .lesson-node--done .lesson-node-ring {
-  background: var(--gesho-500);
+  background: radial-gradient(circle at 33% 28%, color-mix(in srgb, var(--gesho-500) 55%, white) 0%, var(--gesho-500) 45%, var(--gesho-600) 100%);
   box-shadow: 0 6px 0 var(--gesho-600), 0 10px 18px rgba(43, 27, 18, 0.2);
 }
 .lesson-node--locked .lesson-node-ring {
-  background: var(--cream-300);
-  box-shadow: 0 6px 0 var(--coffee-700, #58381f)33;
+  background: radial-gradient(circle at 33% 28%, var(--cream-100) 0%, var(--cream-300) 100%);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--coffee-700) 30%, transparent), 0 8px 14px rgba(43, 27, 18, 0.12);
 }
 
 .lesson-node-ring svg {
@@ -293,6 +332,9 @@
   color: var(--coffee-800);
   max-width: 110px;
   text-align: center;
+  background: color-mix(in srgb, var(--cream-200) 88%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
 }
 
 /* ===========================================================

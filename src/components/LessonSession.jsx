@@ -67,7 +67,7 @@ export function LessonSession({ course, lesson, onExit, onComplete }) {
 
       {feedback && (
         <div className={`feedback-banner feedback-banner--${feedback}`} role="status" aria-live="polite">
-          <TiletDivider height={8} color={feedback === "correct" ? "var(--cream-100)" : "var(--cream-100)"} />
+          <TiletDivider height={8} color="var(--cream-100)" accent="var(--cream-100)" />
           <span>{feedback === "correct" ? "ትክክል ነው! 🎉" : "እንደገና ሞክር"}</span>
         </div>
       )}

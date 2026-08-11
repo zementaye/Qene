@@ -35,7 +35,7 @@ export function TopBar({ courses = [], courseId, onChangeCourse }) {
         <span className="stat stat-hearts" title="ልብ">
           {Array.from({ length: maxHearts }).map((_, i) => (
             <span key={i} className={i < hearts ? "heart heart-full" : "heart heart-empty"}>
-              ♥
+              {i < hearts ? "♥" : "♡"}
             </span>
           ))}
         </span>
