@@ -1,12 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { getCourse, listCourses, flattenLessons, DEFAULT_COURSE_ID } from "../data/courseLoader.js";
 import { ProgressProvider, useProgress } from "../context/ProgressContext.jsx";
-import { TopBar } from "./TopBar.jsx";
-import { SkillPath } from "./SkillPath.jsx";
-import { LessonSession } from "./LessonSession.jsx";
-import { ResultScreen } from "./ResultScreen.jsx";
+import { useHashRoute, routeParts } from "../router.jsx";
+import { Sidebar } from "./layout/Sidebar.jsx";
+import { BottomNav } from "./layout/BottomNav.jsx";
+import { AppHeader } from "./layout/AppHeader.jsx";
+import { HomePage } from "../pages/HomePage.jsx";
+import { LearnPage } from "../pages/LearnPage.jsx";
+import { LessonPage } from "../pages/LessonPage.jsx";
+import { ResultsPage } from "../pages/ResultsPage.jsx";
+import { ProfilePage } from "../pages/ProfilePage.jsx";
+import { CoursesPage } from "../pages/CoursesPage.jsx";
 
 const COURSE_STORAGE_KEY = "qene.course.v1";
+
+const PAGE_TITLES = {
+  home: { title: "መነሻ", subtitle: "Home" },
+  learn: { title: "ተማር", subtitle: "Learn" },
+  profile: { title: "የእኔ መገለጫ", subtitle: "Profile" },
+  courses: { title: "ኮርሶች", subtitle: "Courses" },
+};
 
 function loadInitialCourseId() {
   try {
@@ -24,9 +37,9 @@ function AppInner() {
   const flatLessons = useMemo(() => flattenLessons(course), [course]);
   const { touchStreak, addXp, completeLesson, refillHearts } = useProgress();
 
-  const [screen, setScreen] = useState("path"); // path | lesson | results
-  const [activeLesson, setActiveLesson] = useState(null);
+  const [route, navigate] = useHashRoute();
   const [lastResult, setLastResult] = useState(null);
+  const [lastLessonId, setLastLessonId] = useState(null);
 
   useEffect(() => {
     try {
@@ -37,51 +50,80 @@ function AppInner() {
   }, [courseId]);
 
   function changeCourse(nextId) {
-    if (nextId === courseId) return;
-    setCourseId(nextId);
-    setScreen("path");
-    setActiveLesson(null);
+    if (nextId !== courseId) setCourseId(nextId);
+    navigate("/learn");
   }
+
+  const parts = routeParts(route);
+  const page = parts[0] || "home";
+  const activeLesson = page === "lesson" ? flatLessons.find((l) => l.id === parts[1]) : null;
+  const resultLesson = lastLessonId ? flatLessons.find((l) => l.id === lastLessonId) : null;
+  const isImmersive = page === "lesson" && !!activeLesson;
 
   function startLesson(lesson) {
-    setActiveLesson(lesson);
-    setScreen("lesson");
+    navigate(`/lesson/${lesson.id}`);
   }
 
-  function handleLessonComplete(result) {
+  function handleLessonComplete(lesson, result) {
     setLastResult(result);
-    setScreen("results");
+    setLastLessonId(lesson.id);
     if (!result.failed) {
       touchStreak();
       addXp(Math.max(10, Math.round(result.score / 5)));
-      completeLesson(activeLesson.id, result.score);
+      completeLesson(lesson.id, result.score);
     }
-  }
-
-  function handleContinue() {
-    setScreen("path");
-    setActiveLesson(null);
+    navigate("/results");
   }
 
   function handleRetry() {
     refillHearts();
-    setScreen("lesson");
+    if (lastLessonId) navigate(`/lesson/${lastLessonId}`);
+    else navigate("/learn");
   }
 
+  function handleContinue() {
+    navigate("/learn");
+  }
+
+  const headerInfo = PAGE_TITLES[page];
+
   return (
-    <div className="app-shell">
-      {screen !== "lesson" && (
-        <TopBar courses={listCourses()} courseId={courseId} onChangeCourse={changeCourse} />
-      )}
-      <main className="app-main">
-        {screen === "path" && <SkillPath course={course} flatLessons={flatLessons} onSelectLesson={startLesson} />}
-        {screen === "lesson" && activeLesson && (
-          <LessonSession course={course} lesson={activeLesson} onExit={handleContinue} onComplete={handleLessonComplete} />
-        )}
-        {screen === "results" && activeLesson && (
-          <ResultScreen result={lastResult} lesson={activeLesson} onContinue={handleContinue} onRetry={handleRetry} />
-        )}
-      </main>
+    <div className={`app-shell ${isImmersive ? "app-shell--immersive" : ""}`}>
+      {!isImmersive && <Sidebar current={page} onNavigate={navigate} course={course} />}
+      <div className="app-content">
+        {!isImmersive && headerInfo && <AppHeader title={headerInfo.title} subtitle={headerInfo.subtitle} />}
+        <main className="app-main">
+          {page === "home" && (
+            <HomePage course={course} flatLessons={flatLessons} onSelectLesson={startLesson} onGoLearn={() => navigate("/learn")} />
+          )}
+
+          {page === "learn" && <LearnPage course={course} flatLessons={flatLessons} onSelectLesson={startLesson} />}
+
+          {page === "lesson" && activeLesson && (
+            <LessonPage
+              course={course}
+              lesson={activeLesson}
+              onExit={() => navigate("/learn")}
+              onComplete={(result) => handleLessonComplete(activeLesson, result)}
+            />
+          )}
+          {page === "lesson" && !activeLesson && (
+            <LearnPage course={course} flatLessons={flatLessons} onSelectLesson={startLesson} />
+          )}
+
+          {page === "results" && lastResult && (
+            <ResultsPage result={lastResult} lesson={resultLesson} onContinue={handleContinue} onRetry={handleRetry} />
+          )}
+          {page === "results" && !lastResult && (
+            <HomePage course={course} flatLessons={flatLessons} onSelectLesson={startLesson} onGoLearn={() => navigate("/learn")} />
+          )}
+
+          {page === "profile" && <ProfilePage />}
+
+          {page === "courses" && <CoursesPage courses={listCourses()} courseId={courseId} onChangeCourse={changeCourse} />}
+        </main>
+      </div>
+      {!isImmersive && <BottomNav current={page} onNavigate={navigate} />}
     </div>
   );
 }

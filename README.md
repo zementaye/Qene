@@ -46,17 +46,39 @@ accounts/sync backend lands, that'll be a second service added to the same
 
 ## What's in the app
 
-Two courses ship out of the box, switchable from the dropdown in the top
-bar (progress, XP, streak, and hearts are shared across courses; lesson
-completion is tracked per course so switching never overwrites the other
-course's progress):
+The app is now a real multi-page web app — Home, Learn, Profile, and
+Courses each have their own URL (`#/home`, `#/learn`, `#/profile`,
+`#/courses`) via a small built-in hash router (`src/router.jsx`), with a
+sidebar on desktop and a bottom tab bar on mobile. No page-management
+dependency was added; it's ~40 lines of React on top of the browser's own
+`hashchange` event, so `npm install` still only pulls in React + Vite.
 
-- **Amharic → English** — 6 units / lessons, ~50 exercises: **Greetings**,
-  **I & You** (pronouns), **Numbers 1–10**, **Family**, **Food & Drink**,
-  **Common Phrases**.
-- **Amharic → Arabic** — 2 units / lessons, ~11 exercises: **Greetings**,
-  **Numbers 1–5**. Added specifically to prove out the "just drop in a
-  content file" claim below — see `src/data/courses/am-ar.js`.
+- **Home** — a dashboard: streak/XP/hearts at a glance, a "continue where
+  you left off" card, and unit-progress tiles.
+- **Learn** — the skill path (unchanged mechanic: a winding tilet-motif
+  trail of lesson nodes, locked until the one before it is done).
+- **Lesson** — the immersive, distraction-free exercise runner (no
+  sidebar/nav while a lesson is active).
+- **Profile** — per-course progress bars and an achievements grid (first
+  lesson, streak milestones, XP milestones, perfect scores, course
+  completion — all computed from existing progress data, nothing new to
+  persist).
+- **Courses** — browse and switch the active course, with "coming soon"
+  cards for languages not built yet (French, German, Swahili) so the
+  catalog reads as a roadmap, not just two options in a dropdown.
+
+Two courses ship with content (progress, XP, streak, and hearts are shared
+across courses; lesson completion is tracked per course so switching never
+overwrites the other course's progress):
+
+- **Amharic → English** — 12 units / 13 lessons / 107 exercises:
+  **Greetings**, **I & You** (pronouns), **Numbers 1–20**, **Family**,
+  **Food & Drink**, **Common Phrases**, **Colors**, **Days & Time**,
+  **Weather**, **Animals**, **Body Parts**, **Common Verbs**.
+- **Amharic → Arabic** — 6 units / 6 lessons / 40 exercises:
+  **Greetings**, **Numbers 1–5**, **Family**, **Food & Drink**,
+  **Colors**, **Common Phrases**. Proves out the "just drop in a content
+  file" claim below — see `src/data/courses/am-ar.js`.
 
 Four exercise types are wired up: multiple choice, type-the-translation,
 match-the-pairs, and listening (audio-first — the target-language word is
@@ -70,6 +92,13 @@ learners.
 
 ## How the engine works
 
+- **`src/router.jsx`** — the hash router. `useHashRoute()` returns the
+  current path and a `navigate(path)` function; that's the whole API.
+- **`src/components/App.jsx`** — the shell: reads the route, decides which
+  page to render, and hides the sidebar/bottom-nav during an active lesson.
+- **`src/pages/*.jsx`** — one file per page (Home, Learn, Lesson, Results,
+  Profile, Courses). Adding a new page is: create the file, add a nav
+  entry in `src/components/layout/navItems.js`, add a case in `App.jsx`.
 - **`src/data/courses/*.js`** — the actual course content (units → lessons
   → exercises), one file per course. This is the file to hand-edit or
   generate more of.

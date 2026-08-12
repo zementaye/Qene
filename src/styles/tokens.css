@@ -11,9 +11,11 @@
   --coffee-900: #2b1b12;
   --coffee-800: #3d2818;
   --coffee-700: #58381f;
+  --coffee-600: #74492a;
   --cream-100: #faf5e9;
   --cream-200: #f3ecdd;
   --cream-300: #e8dcc2;
+  --cream-400: #d9c9a3;
   --gold-500: #d4a017;
   --gold-400: #e3b53a;
   --gold-300: #f0c869;
@@ -21,8 +23,29 @@
   --clay-600: #8a3025;
   --gesho-500: #5b7553;
   --gesho-600: #465e40;
+  --gesho-300: #8fa987;
   --ink: #241509;
   --paper: #faf5e9;
+
+  /* surfaces for the new card-based layout: distinct from the page
+     background so cards read as raised, without abandoning the warm
+     cream/coffee palette */
+  --surface: #ffffff;
+  --surface-muted: #fdfbf5;
+  --surface-border: #e9ddc4;
+  --shadow-sm: 0 1px 2px rgba(36, 21, 9, 0.06), 0 1px 1px rgba(36, 21, 9, 0.04);
+  --shadow-md: 0 6px 20px rgba(36, 21, 9, 0.08), 0 2px 6px rgba(36, 21, 9, 0.05);
+  --shadow-lg: 0 16px 40px rgba(36, 21, 9, 0.14), 0 4px 12px rgba(36, 21, 9, 0.08);
+
+  /* --- spacing scale --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 28px;
+  --space-7: 36px;
+  --space-8: 48px;
 
   /* --- type --- */
   --font-display: "Fraunces", serif;
@@ -33,7 +56,12 @@
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 26px;
+  --radius-xl: 32px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* --- layout --- */
+  --sidebar-width: 248px;
+  --bottom-nav-height: 68px;
 }
 
 * {

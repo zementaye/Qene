@@ -29,3 +29,18 @@ export function flattenLessons(course) {
   }
   return out;
 }
+
+// Total exercise count across every lesson in a course — used by the
+// dashboard/profile pages to show "how much is in here" at a glance.
+export function countExercises(course) {
+  return flattenLessons(course).reduce((sum, l) => sum + l.exercises.length, 0);
+}
+
+// Courses that aren't built yet but are worth showing as a preview on the
+// Courses page, so the catalog reads as a living roadmap rather than just
+// the two shipped courses. Not registered in COURSES — nothing to select.
+export const UPCOMING_COURSES = [
+  { id: "am-fr", fromLabel: "አማርኛ", toLabel: "Français", toName: "French" },
+  { id: "am-de", fromLabel: "አማርኛ", toLabel: "Deutsch", toName: "German" },
+  { id: "am-sw", fromLabel: "አማርኛ", toLabel: "Kiswahili", toName: "Swahili" },
+];
