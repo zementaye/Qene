@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useProgress } from "../context/ProgressContext.jsx";
+import { useProgress, getProficiencyLevel } from "../context/ProgressContext.jsx";
 import { listCourses, flattenLessons } from "../data/courseLoader.js";
 import { NavIcon } from "../components/layout/NavIcon.jsx";
 import { TiletDivider } from "../components/Tilet.jsx";
@@ -20,8 +20,9 @@ function computeAchievements({ streak, xp, completedLessons, courseProgress }) {
   ];
 }
 
-export function ProfilePage() {
-  const { streak, xp, hearts, maxHearts, completedLessons } = useProgress();
+export function ProfilePage({ onStartPlacementTest }) {
+  const { streak, xp, hearts, maxHearts, completedLessons, proficiencyLevel, proficiencyScore } = useProgress();
+  const proficiency = getProficiencyLevel(proficiencyLevel);
 
   const courseProgress = useMemo(
     () =>
@@ -67,6 +68,34 @@ export function ProfilePage() {
           <span className="stat-card-value">{hearts}/{maxHearts}</span>
           <span className="stat-card-label">ልብ</span>
         </div>
+      </div>
+
+      <div className="home-section-head">
+        <TiletDivider height={10} color="var(--gold-400)" />
+        <h2 className="home-section-title">የቋንቋ ደረጃ</h2>
+      </div>
+      <div className="placement-card">
+        {proficiency ? (
+          <>
+            <div className="placement-card-current">
+              <span className="placement-card-badge">
+                <span className="text-amharic">{proficiency.label}</span>
+                <span lang="en">{proficiency.sub}</span>
+              </span>
+              <span className="placement-card-score">{proficiencyScore}%</span>
+            </div>
+            <p className="placement-card-hint">
+              ትምህርት ስትሰራ የሚታይህ ማብራሪያ በዚህ ደረጃ ላይ የተመሠረተ ነው። ደረጃህ ካደገ እንደገና ፈትን።
+            </p>
+          </>
+        ) : (
+          <p className="placement-card-hint">
+            ትምህርት ላይ የበለጠ ተስማሚ ማብራሪያ እንዲታይህ አጭር የደረጃ ፈተና ውሰድ።
+          </p>
+        )}
+        <button className="secondary-btn" onClick={onStartPlacementTest}>
+          {proficiency ? "እንደገና ፈትን" : "የደረጃ ፈተና ውሰድ"}
+        </button>
       </div>
 
       <div className="home-section-head">

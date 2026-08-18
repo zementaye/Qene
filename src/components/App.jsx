@@ -11,6 +11,7 @@ import { LessonPage } from "../pages/LessonPage.jsx";
 import { ResultsPage } from "../pages/ResultsPage.jsx";
 import { ProfilePage } from "../pages/ProfilePage.jsx";
 import { CoursesPage } from "../pages/CoursesPage.jsx";
+import { PlacementTestPage } from "../pages/PlacementTestPage.jsx";
 
 const COURSE_STORAGE_KEY = "qene.course.v1";
 
@@ -58,7 +59,7 @@ function AppInner() {
   const page = parts[0] || "home";
   const activeLesson = page === "lesson" ? flatLessons.find((l) => l.id === parts[1]) : null;
   const resultLesson = lastLessonId ? flatLessons.find((l) => l.id === lastLessonId) : null;
-  const isImmersive = page === "lesson" && !!activeLesson;
+  const isImmersive = (page === "lesson" && !!activeLesson) || page === "placement-test";
 
   function startLesson(lesson) {
     navigate(`/lesson/${lesson.id}`);
@@ -118,9 +119,17 @@ function AppInner() {
             <HomePage course={course} flatLessons={flatLessons} onSelectLesson={startLesson} onGoLearn={() => navigate("/learn")} />
           )}
 
-          {page === "profile" && <ProfilePage />}
+          {page === "profile" && <ProfilePage onStartPlacementTest={() => navigate("/placement-test")} />}
 
           {page === "courses" && <CoursesPage courses={listCourses()} courseId={courseId} onChangeCourse={changeCourse} />}
+
+          {page === "placement-test" && (
+            <PlacementTestPage
+              course={course}
+              onExit={() => navigate("/profile")}
+              onDone={() => navigate("/profile")}
+            />
+          )}
         </main>
       </div>
       {!isImmersive && <BottomNav current={page} onNavigate={navigate} />}

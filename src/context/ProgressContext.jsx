@@ -22,7 +22,36 @@ function loadInitial() {
     streak: 0,
     lastActiveDate: null,
     completedLessons: {}, // lessonId -> { bestScore, timesCompleted }
+    // Result of the proficiency placement test (see PlacementTest.jsx) -
+    // null until the learner takes it. Drives how much detail the lesson
+    // feedback panel shows (see utils/feedback.js).
+    proficiencyLevel: null, // one of PROFICIENCY_LEVELS ids, or null
+    proficiencyScore: null, // 0-100 weighted score from the last test
+    proficiencyTestedAt: null, // ISO date string
   };
+}
+
+// Ordered low -> high. `minPct` is the weighted-score threshold (0-100) a
+// placement-test result needs to reach to land on that level - see
+// computeProficiencyLevel below.
+export const PROFICIENCY_LEVELS = [
+  { id: "beginner", label: "ጀማሪ", sub: "Beginner", minPct: 0 },
+  { id: "elementary", label: "መጀመሪያ ደረጃ", sub: "Elementary", minPct: 40 },
+  { id: "intermediate", label: "መካከለኛ ደረጃ", sub: "Intermediate", minPct: 70 },
+  { id: "advanced", label: "ከፍተኛ ደረጃ", sub: "Advanced", minPct: 90 },
+];
+
+export function getProficiencyLevel(id) {
+  return PROFICIENCY_LEVELS.find((l) => l.id === id) ?? null;
+}
+
+// Highest level whose threshold the score clears.
+export function computeProficiencyLevel(pct) {
+  let best = PROFICIENCY_LEVELS[0];
+  for (const lvl of PROFICIENCY_LEVELS) {
+    if (pct >= lvl.minPct) best = lvl;
+  }
+  return best;
 }
 
 const ProgressContext = createContext(null);
@@ -114,6 +143,18 @@ export function ProgressProvider({ children }) {
             completedLessons: { ...s.completedLessons, [lessonId]: { bestScore, timesCompleted } },
           };
         });
+      },
+
+      // Records the outcome of the proficiency placement test (see
+      // PlacementTest.jsx). `pct` is the weighted 0-100 score; `levelId`
+      // is the PROFICIENCY_LEVELS id that score maps to.
+      setProficiencyResult(levelId, pct) {
+        setState((s) => ({
+          ...s,
+          proficiencyLevel: levelId,
+          proficiencyScore: Math.round(pct),
+          proficiencyTestedAt: new Date().toISOString(),
+        }));
       },
     }),
     [state]

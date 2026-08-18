@@ -967,21 +967,120 @@
   background: color-mix(in srgb, var(--clay-500) 14%, transparent);
 }
 
-.feedback-banner {
-  padding: 16px 22px 22px;
+/* Post-answer explanation panel: stays on screen until the learner taps
+   Continue (see LessonSession.jsx) instead of auto-advancing, and carries
+   the level-scaled explanation from utils/feedback.js. */
+.answer-feedback-panel {
+  padding: 16px 22px 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  color: var(--cream-100);
+}
+.answer-feedback-panel--correct {
+  background: var(--gesho-500);
+}
+.answer-feedback-panel--wrong {
+  background: var(--clay-500);
+}
+.answer-feedback-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.answer-feedback-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cream-100) 25%, transparent);
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.answer-feedback-title {
   font-family: var(--font-amharic);
   font-weight: 700;
   font-size: 16px;
-  color: var(--cream-100);
 }
-.feedback-banner--correct {
-  background: var(--gesho-500);
+.answer-feedback-example {
+  background: color-mix(in srgb, var(--cream-100) 16%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
-.feedback-banner--wrong {
-  background: var(--clay-500);
+.answer-feedback-example-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+.answer-feedback-example-row--secondary {
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+.answer-feedback-example-sep {
+  opacity: 0.7;
+  font-weight: 400;
+}
+.answer-feedback-sound-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 2px 4px;
+}
+.answer-feedback-note {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.92;
+}
+.answer-feedback-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answer-feedback-secondary-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+.answer-feedback-tip {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  opacity: 0.9;
+}
+.answer-feedback-continue {
+  align-self: stretch;
+  margin-top: 4px;
+  background: var(--cream-100);
+  color: var(--coffee-950);
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.answer-feedback-continue:active {
+  transform: translateY(1px);
+}
+.answer-feedback-continue:focus-visible {
+  outline: 3px solid var(--gold-300);
+  outline-offset: 2px;
 }
 
 /* ===========================================================
@@ -1257,4 +1356,142 @@
     grid-template-columns: 1fr;
     gap: 6px;
   }
+}
+
+/* ===========================================================
+   Secondary / link buttons (profile CTAs, placement test)
+   =========================================================== */
+.secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: var(--cream-100);
+  color: var(--coffee-900);
+  border: 2px solid var(--gold-400);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+.secondary-btn:hover {
+  background: var(--cream-200);
+}
+.secondary-btn:active {
+  transform: translateY(1px);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--coffee-600);
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* ===========================================================
+   Proficiency placement test
+   =========================================================== */
+.placement-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.placement-card-current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.placement-card-badge {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-amharic);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--coffee-900);
+}
+.placement-card-badge span[lang="en"] {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--coffee-700);
+}
+.placement-card-score {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-500);
+}
+.placement-card-hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--coffee-700);
+}
+
+.placement-test .lesson-session-body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.placement-question-count {
+  font-weight: 700;
+  color: var(--coffee-700);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.placement-intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px 26px 40px;
+}
+.placement-intro-emoji {
+  font-size: 44px;
+}
+.placement-intro-title {
+  font-family: var(--font-amharic);
+  font-size: 24px;
+  color: var(--coffee-900);
+  margin: 4px 0;
+}
+.placement-intro-body {
+  color: var(--coffee-700);
+  font-size: 14px;
+  max-width: 320px;
+  margin: 0 0 10px;
+}
+
+.placement-level-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-amharic);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--gold-500);
+  margin-top: 4px;
+}
+.placement-level-badge span[lang="en"] {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--coffee-700);
 }
